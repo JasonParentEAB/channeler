@@ -88,3 +88,25 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST', 'localhost'),
+        'PORT': os.getenv('PGPORT', '5432'),
+    }
+}
+
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [REDIS_URL],
+        }
+    }
+}
