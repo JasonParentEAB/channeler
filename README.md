@@ -14,10 +14,12 @@ Open your terminal and create a new PostgreSQL user and database. Enter a passwo
 ```bash
 computer$ createuser -d -e -s -W channeler
 Password: <your_password>
-CREATE ROLE example_search SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
+SELECT pg_catalog.set_config('search_path', '', false)
+CREATE ROLE channeler SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
 computer$ createdb -e -O "channeler" -W channeler
 Password: <your_password>
-CREATE DATABASE example_search OWNER example_search;
+SELECT pg_catalog.set_config('search_path', '', false)
+CREATE DATABASE channeler OWNER channeler;
 ```
 
 Export environment variables for your new database name, user, and password.
@@ -37,7 +39,7 @@ Run the `python manage.py migrate` command in your terminal to install the initi
 
 ```
 Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, sessions
+  Apply all migrations: admin, auth, contenttypes, sessions, tasks
 Running migrations:
   Applying contenttypes.0001_initial... OK
   Applying auth.0001_initial... OK
@@ -53,6 +55,7 @@ Running migrations:
   Applying auth.0008_alter_user_username_max_length... OK
   Applying auth.0009_alter_user_last_name_max_length... OK
   Applying sessions.0001_initial... OK
+  Applying tasks.0001_initial... OK
 ```
 
 Open a new terminal window (or tab). Connect to the database with `psql` and confirm that the tables exist.
@@ -60,10 +63,11 @@ Open a new terminal window (or tab). Connect to the database with `psql` and con
 ```bash
 (channeler) computer$ psql -U channeler
 channeler=# \c channeler
+You are now connected to database "channeler" as user "channeler".
 channeler=# \dt
-                      List of relations
- Schema |            Name            | Type  |  Owner
---------+----------------------------+-------+----------
+                    List of relations
+ Schema |            Name            | Type  |   Owner
+--------+----------------------------+-------+-----------
  public | auth_group                 | table | channeler
  public | auth_group_permissions     | table | channeler
  public | auth_permission            | table | channeler
@@ -74,7 +78,8 @@ channeler=# \dt
  public | django_content_type        | table | channeler
  public | django_migrations          | table | channeler
  public | django_session             | table | channeler
-(10 rows)
+ public | tasks_task                 | table | channeler
+(11 rows)
 ```
 
 Open a new terminal window (or tab). Connect to the Redis server with `redis-server`.

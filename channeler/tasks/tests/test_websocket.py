@@ -19,7 +19,7 @@ class TestWebsocket:
         assert connected
         await communicator.disconnect()
 
-    async def test_user_can_subscribe_to_task_group(self, client):
+    async def test_user_can_subscribe_to_task_group(self):
         communicator = WebsocketCommunicator(application=application, path='/tasks/')
         connected, _ = await communicator.connect()
 

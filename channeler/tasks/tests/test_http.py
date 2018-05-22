@@ -1,6 +1,5 @@
 # Standard library imports.
 import json
-from unittest import mock
 
 # Django imports.
 from django.urls import reverse
@@ -34,7 +33,7 @@ class TestHTTP:
         }), content_type='application/json')
         response_json = response.json()
         assert response.status_code == 202
-        assert response_json['id'] == 1
+        assert response_json['id'] == 2
         assert response_json['status'] == Task.PENDING
 
     def test_user_can_retrieve_task(self, client):
