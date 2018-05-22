@@ -6,8 +6,30 @@ __author__ = 'Jason Parent'
 
 class NotificationsConsumer(AsyncJsonWebsocketConsumer):
 
-    async def connect(self):
-        await super().connect()
+    async def receive_json(self, content, **kwargs):
+        group = content.get('group')
+        await self.channel_layer.group_add(group=group, channel=self.channel_name)
+        await self.send_json({
+            'detail': f'Added to group {group}.'
+        })
 
-    async def disconnect(self, code):
-        await super().disconnect(code)
+    async def notifications_event(self, event):
+        await self.send_json({
+            'name': event['name'],
+            'data': event['data'],
+        })
+
+
+class TasksConsumer(AsyncJsonWebsocketConsumer):
+
+    async def receive_json(self, content, **kwargs):
+        group = content.get('group')
+        await self.channel_layer.group_add(group=group, channel=self.channel_name)
+        await self.send_json({
+            'detail': f'Added to group {group}.'
+        })
+
+    async def task_status(self, event):
+        await self.send_json({
+            'status': event['status'],
+        })

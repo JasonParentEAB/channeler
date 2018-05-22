@@ -23,7 +23,7 @@ CREATE DATABASE example_search OWNER example_search;
 Export environment variables for your new database name, user, and password.
 
 ```bash
-computer$ export PGDATABASE=channeler PGUSER=channeler PGPASSworD=<your_password>
+computer$ export PGDATABASE=channeler PGUSER=channeler PGPASSWORD=<your_password> PGHOST=localhost PGPORT=5432
 ```
 
 Make a new Python virtual environment and install the project dependencies with `pip`. (We are using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/).)
@@ -62,17 +62,28 @@ Open a new terminal window (or tab). Connect to the database with `psql` and con
 channeler=# \c channeler
 channeler=# \dt
                       List of relations
- Schema |            Name            | Type  |     Owner
---------+----------------------------+-------+----------------
- public | auth_group                 | table | example_search
- public | auth_group_permissions     | table | example_search
- public | auth_permission            | table | example_search
- public | auth_user                  | table | example_search
- public | auth_user_groups           | table | example_search
- public | auth_user_user_permissions | table | example_search
- public | django_admin_log           | table | example_search
- public | django_content_type        | table | example_search
- public | django_migrations          | table | example_search
- public | django_session             | table | example_search
+ Schema |            Name            | Type  |  Owner
+--------+----------------------------+-------+----------
+ public | auth_group                 | table | channeler
+ public | auth_group_permissions     | table | channeler
+ public | auth_permission            | table | channeler
+ public | auth_user                  | table | channeler
+ public | auth_user_groups           | table | channeler
+ public | auth_user_user_permissions | table | channeler
+ public | django_admin_log           | table | channeler
+ public | django_content_type        | table | channeler
+ public | django_migrations          | table | channeler
+ public | django_session             | table | channeler
 (10 rows)
+```
+
+Open a new terminal window (or tab). Connect to the Redis server with `redis-server`.
+
+```
+(channeler) computer$ npm install -g wscat
+(channeler) computer$ wscat ws://localhost:8000/tasks/
+```
+
+```
+(channeler) computer$ curl -X POST http://localhost:8000/tasks/ -H 'Content-Type: application/json' -d '{}'
 ```

@@ -22,10 +22,12 @@ DEFAULT_APPS = (
 
 THIRD_PARTY_APPS = (
     'channels',
+    'django_rq',
 )
 
 LOCAL_APPS = (
     'notifications',
+    'tasks',
 )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -108,5 +110,11 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             'hosts': [REDIS_URL],
         }
+    }
+}
+
+RQ_QUEUES = {
+    'default': {
+        'URL': REDIS_URL,
     }
 }
