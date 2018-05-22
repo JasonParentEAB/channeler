@@ -38,13 +38,22 @@ def create_task(*, task_id, duration=DEFAULT_DURATION, sync=True):
 class TasksView(View):
 
     def get(self, request, task_id=None, *args, **kwargs):
-        task = Task.objects.get(id=task_id)
-        return JsonResponse(status=200, data={
-            'id': task.id,
-            'status': task.get_status_display(),
-            'created': task.created,
-            'updated': task.updated,
-        })
+        if task_id:
+            task = Task.objects.get(id=task_id)
+            return JsonResponse(status=200, data={
+                'id': task.id,
+                'status': task.get_status_display(),
+                'created': task.created,
+                'updated': task.updated,
+            })
+        else:
+            tasks = Task.objects.all()
+            return JsonResponse(status=200, data={'tasks': [{
+                'id': task.id,
+                'status': task.get_status_display(),
+                'created': task.created,
+                'updated': task.updated,
+            } for task in tasks]})
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)

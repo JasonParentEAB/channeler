@@ -31,6 +31,22 @@ export class TaskService {
   ): Observable<Task> {
     let url: string = 'http://localhost:8000/tasks/';
     return this.client.post(url, {duration, sync})
-      .map(data => Task.create(data));
+      .map((object: any) => Task.create(object));
+  }
+
+  retrieveTask(
+    taskId: number
+  ): Observable<Task> {
+    let url: string = `http://localhost:8000/tasks/${taskId}/`;
+    return this.client.get(url)
+      .map((object: any) => Task.create(object));
+  }
+
+  listTasks(): Observable<Task[]> {
+    let url: string = 'http://localhost:8000/tasks/';
+    return this.client.get(url)
+      .map((list: any[]) => {
+        return list.map((element: any) => Task.create(element));
+      });
   }
 }

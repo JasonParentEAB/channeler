@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-lg">
+  <div class="col">
     <h1>Long-Running Tasks</h1>
     <p class="lead">Create a new long-running task.</p>
     <form class="form-inline" novalidate #taskForm="ngForm" (ngSubmit)="createTask()">
@@ -11,5 +11,25 @@
       </div>
       <button class="btn btn-primary" type="submit" [disabled]="false">Create</button>
     </form>
+  </div>
+  <div class="col">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Status</th>
+          <th scope="col">Created</th>
+          <th scope="col">Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <th scope="row">{{ task.id }}</th>
+          <td>{{ task.status }}</td>
+          <td>{{ task.created }}</td>
+          <td>{{ task.updated }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

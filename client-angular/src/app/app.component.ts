@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { TaskService } from '../services/task.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Task, TaskService } from '../services/task.service';
 
 export class FormData {
   constructor(
@@ -13,18 +14,27 @@ export class FormData {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
   data: FormData = new FormData();
+  tasks: Task[];
 
-  constructor(private taskService: TaskService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private taskService: TaskService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.data
+      .subscribe((data: {tasks: Task[]}) => this.tasks = data.tasks);
+  }
 
   createTask(): void {
     this.taskService.createTask(
       this.data.duration, 
       this.data.sync
-    ).subscribe(data => {
-      console.log(data);
+    ).subscribe(task => {
+      this.tasks.push(task);
     });
   }
 }

@@ -43,3 +43,12 @@ class TestHTTP:
         assert response.status_code == 200
         assert response_json['id'] == task.id
         assert response_json['status'] == task.status
+
+    def test_user_can_list_tasks(self, client):
+        task1 = Task.objects.create()
+        task2 = Task.objects.create()
+        task3 = Task.objects.create()
+        response = client.get(reverse('tasks:tasks'), content_type='application/json')
+        response_json = response.json()
+        assert response.status_code == 200
+        assert len(response_json['tasks']) == 3
