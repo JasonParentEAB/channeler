@@ -1,0 +1,15 @@
+<div class="row">
+  <div class="col-lg">
+    <h1>Long-Running Tasks</h1>
+    <p class="lead">Create a new long-running task.</p>
+    <form class="form-inline" novalidate #taskForm="ngForm" (ngSubmit)="createTask()">
+      <label class="mr-2" for="duration">Duration</label>
+      <input id="duration" class="mr-2" type="number" value="5" name="duration" required [(ngModel)]="data.duration">
+      <div class="form-check mr-2">
+        <input id="sync" class="form-check-input" type="checkbox" name="sync" checked required [(ngModel)]="data.sync">
+        <label for="sync" class="form-check-label">Sync</label>
+      </div>
+      <button class="btn btn-primary" type="submit" [disabled]="false">Create</button>
+    </form>
+  </div>
+</div>
