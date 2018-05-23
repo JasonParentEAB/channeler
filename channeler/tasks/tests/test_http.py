@@ -53,7 +53,7 @@ class TestHTTP:
 
     def test_user_can_clear_all_tasks(self, client):
         tasks = Task.objects.bulk_create([Task() for _ in range(3)])
-        response = client.post(reverse('tasks:clear-tasks'))
+        response = client.post(reverse('tasks:clear-tasks'), content_type='application/json')
         assert response.json() == {
             'detail': f'You deleted {len(tasks)} tasks.'
         }

@@ -1,6 +1,9 @@
 # Standard library imports.
 import time
 
+# Django imports.
+from django.db import connection
+
 # Third-party imports.
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -49,6 +52,14 @@ class ClearTasksView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         count, _ = Task.objects.all().delete()
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                BEGIN;
+                SELECT setval(pg_get_serial_sequence('"tasks_task"','id'), 
+                       coalesce(max("id"), 1), max("id") IS NOT null) 
+                  FROM "tasks_task";
+                COMMIT;
+            """)
         return response.Response(status=status.HTTP_200_OK, data={
             'detail': f'You deleted {count} tasks.'
         })
