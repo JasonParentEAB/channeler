@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col">
-    <h1>Long-Running Tasks</h1>
+    <h2>New Task</h2>
     <p class="lead">Create a new long-running task.</p>
     <form class="form-inline" novalidate #taskForm="ngForm" (ngSubmit)="createTask()">
       <label class="mr-2" for="duration">Duration</label>
@@ -13,6 +13,7 @@
     </form>
   </div>
   <div class="col">
+    <h2>Tasks</h2>
     <table class="table">
       <thead>
         <tr>
@@ -33,3 +34,4 @@
     </table>
   </div>
 </div>
+      

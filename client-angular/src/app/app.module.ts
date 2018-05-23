@@ -1,11 +1,16 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
-import { TaskService } from '../services/task.service';
-import { TasksComponent } from '../components/tasks/tasks.component';
+import { TaskResolver } from './resolvers/task.resolver';
+import { TaskService } from './services/task.service';
+
+import { AppComponent } from './components/app/app.component';
+import { TasksComponent } from './components/tasks/tasks.component';
+
+import { ROUTES } from './app.routes';
 
 @NgModule({
   declarations: [
@@ -15,13 +20,21 @@ import { TasksComponent } from '../components/tasks/tasks.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'csrftoken',
+      headerName: 'X-CSRFToken'
+    }),
+    RouterModule.forRoot(ROUTES, {
+      useHash: true
+    })
   ],
   providers: [
-    TaskService
+    TaskService,
+    TaskResolver
   ],
   bootstrap: [
     AppComponent
   ]
 })
-export class AppModule { }
+export class AppModule {}

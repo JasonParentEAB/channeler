@@ -21,3 +21,6 @@ class Task(models.Model):
     status = models.CharField(max_length=7, choices=STATUS_CHOICES, default=PENDING)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('id',)
