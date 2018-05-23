@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-
 const DEFAULT_DATETIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
 export class Task {

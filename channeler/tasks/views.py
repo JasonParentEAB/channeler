@@ -28,7 +28,7 @@ def create_task(*, task_id, duration=DEFAULT_DURATION, sync=True):
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(group=f'task-{task_id}', message={
             'type': 'task.status',
-            'status': task.status,
+            'task': TaskSerializer(task).data,
         })
 
 

@@ -15,5 +15,5 @@ class TasksConsumer(AsyncJsonWebsocketConsumer):
 
     async def task_status(self, event):
         await self.send_json({
-            'status': event['status'],
+            'task': event['task'],
         })

@@ -37,13 +37,23 @@ class TestWebsocket:
         channel_layer = get_channel_layer()
         await channel_layer.group_send(group=group, message={
             'type': 'task.status',
-            'status': Task.SUCCESS,
+            'task': {
+                'id': 1,
+                'status': Task.SUCCESS,
+                'created': 'now',
+                'updated': 'now',
+            }
         })
 
         response = await communicator.receive_json_from()
 
         assert {
-            'status': Task.SUCCESS,
+            'task': {
+                'id': 1,
+                'status': Task.SUCCESS,
+                'created': 'now',
+                'updated': 'now',
+            }
         } == response
 
         await communicator.disconnect()
