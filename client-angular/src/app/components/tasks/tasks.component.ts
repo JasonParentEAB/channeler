@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { WebSocketSubject } from 'rxjs/webSocket';
 
 import { Task, TaskService } from '../../services/task.service';
+import { environment } from '../../../environments/environment';
 
 export class FormData {
   constructor(
@@ -29,7 +30,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     private taskService: TaskService,
     private toastr: ToastrService
   ) {
-    this.socket = new WebSocketSubject('ws://localhost:8000/tasks/');
+    this.socket = new WebSocketSubject(`${environment.ws_base_url}/tasks/`);
   }
 
   ngOnInit(): void {

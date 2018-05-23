@@ -5,7 +5,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
+import { environment } from '../../environments/environment';
+
 const DEFAULT_DATETIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
+const HTTP_BASE_URL = environment.http_base_url;
 
 export class Task {
   constructor(
@@ -33,7 +36,7 @@ export class TaskService {
     duration: number = 10, 
     sync: boolean = true
   ): Observable<Task> {
-    let url: string = 'http://localhost:8000/tasks/';
+    let url: string = `${HTTP_BASE_URL}/tasks/`;
     return this.client.post<any>(url, {duration, sync}).pipe(
       map(data => Task.create(data))
     );
@@ -42,14 +45,14 @@ export class TaskService {
   retrieveTask(
     taskId: number
   ): Observable<Task> {
-    let url: string = `http://localhost:8000/tasks/${taskId}/`;
+    let url: string = `${HTTP_BASE_URL}/tasks/${taskId}/`;
     return this.client.get<any>(url).pipe(
       map(data => Task.create(data))
     );
   }
 
   listTasks(): Observable<Task[]> {
-    let url: string = 'http://localhost:8000/tasks/';
+    let url: string = `${HTTP_BASE_URL}/tasks/`;
     return this.client.get<any[]>(url).pipe(
       map(data => {
         return data.map((item: any) => Task.create(item));
@@ -58,7 +61,7 @@ export class TaskService {
   }
 
   clearTasks(): Observable<any> {
-    let url: string = 'http://localhost:8000/tasks/clear/';
+    let url: string = `${HTTP_BASE_URL}/tasks/clear/`;
     return this.client.post<any>(url, null);
   }
 }
