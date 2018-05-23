@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import 'rxjs/add/operator/map';
+
 
 const DEFAULT_DATETIME_FORMAT = 'MMMM Do YYYY, h:mm:ss a';
 
@@ -33,23 +35,31 @@ export class TaskService {
     sync: boolean = true
   ): Observable<Task> {
     let url: string = 'http://localhost:8000/tasks/';
-    return this.client.post(url, {duration, sync})
-      .map((data: any) => Task.create(data));
+    return this.client.post<any>(url, {duration, sync}).pipe(
+      map(data => Task.create(data))
+    );
   }
 
   retrieveTask(
     taskId: number
   ): Observable<Task> {
     let url: string = `http://localhost:8000/tasks/${taskId}/`;
-    return this.client.get(url)
-      .map((data: any) => Task.create(data));
+    return this.client.get<any>(url).pipe(
+      map(data => Task.create(data))
+    );
   }
 
   listTasks(): Observable<Task[]> {
     let url: string = 'http://localhost:8000/tasks/';
-    return this.client.get(url)
-      .map((data: any) => {
-        return data['tasks'].map((item: any) => Task.create(item));
-      });
+    return this.client.get<any[]>(url).pipe(
+      map(data => {
+        return data.map((item: any) => Task.create(item));
+      })
+    );
+  }
+
+  clearTasks(): Observable<any> {
+    let url: string = 'http://localhost:8000/tasks/clear/';
+    return this.client.post<any>(url, null);
   }
 }

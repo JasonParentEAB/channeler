@@ -1,20 +1,15 @@
 # Standard library imports.
-import json
 import time
-
-# Django imports.
-from django.http import JsonResponse
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 # Third-party imports.
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 import django_rq
+from rest_framework import response, status, views, viewsets
 
 # Local imports.
 from .models import Task
+from .serializers import TaskSerializer
 
 __author__ = 'Jason Parent'
 
@@ -34,39 +29,26 @@ def create_task(*, task_id, duration=DEFAULT_DURATION, sync=True):
         })
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class TasksView(View):
+class TasksView(viewsets.ModelViewSet):
 
-    def get(self, request, task_id=None, *args, **kwargs):
-        if task_id:
-            task = Task.objects.get(id=task_id)
-            return JsonResponse(status=200, data={
-                'id': task.id,
-                'status': task.get_status_display(),
-                'created': task.created,
-                'updated': task.updated,
-            })
-        else:
-            tasks = Task.objects.all()
-            return JsonResponse(status=200, data={'tasks': [{
-                'id': task.id,
-                'status': task.get_status_display(),
-                'created': task.created,
-                'updated': task.updated,
-            } for task in tasks]})
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    lookup_url_kwarg = 'task_id'
 
-    def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        task = Task.objects.create()
+    def perform_create(self, serializer):
+        task = serializer.save()
         django_rq.enqueue(
             create_task,
             task_id=task.id,
-            duration=int(data.get('duration', DEFAULT_DURATION)),
-            sync=bool(int(data.get('sync', 1)))
+            duration=self.request.data.get('duration', DEFAULT_DURATION),
+            sync=self.request.data.get('sync', True)
         )
-        return JsonResponse(status=202, data={
-            'id': task.id,
-            'status': task.get_status_display(),
-            'created': task.created,
-            'updated': task.updated,
+
+
+class ClearTasksView(views.APIView):
+
+    def post(self, request, *args, **kwargs):
+        count, _ = Task.objects.all().delete()
+        return response.Response(status=status.HTTP_200_OK, data={
+            'detail': f'You deleted {count} tasks.'
         })

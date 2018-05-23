@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { ToastrService } from 'ngx-toastr';
+
 import { Task, TaskService } from '../../services/task.service';
 
 export class FormData {
@@ -21,7 +24,8 @@ export class TasksComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -42,17 +46,25 @@ export class TasksComponent implements OnInit, OnDestroy {
       if (this.data.sync) {
         clearInterval(this.intervalId);
         this.intervalId = window.setInterval(() => {
-          console.log('Are you done yet?');
+          this.toastr.info('Are you done yet?');
           this.taskService.retrieveTask(task.id)
             .subscribe(task => {
               this.tasks[this.tasks.length - 1] = task;
               if (task.status !== 'PENDING') {
                 clearInterval(this.intervalId);
-                console.log('I\'m done.');
+                this.toastr.success('I\'m done.');
               }
             });
         }, 1000); 
       }
     });
+  }
+
+  clearTasks(): void {
+    this.taskService.clearTasks()
+      .subscribe(data => {
+        this.toastr.warning(data['detail']);
+        this.tasks = [];
+      });
   }
 }

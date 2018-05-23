@@ -2,7 +2,10 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+
+import { ToastrModule } from 'ngx-toastr';
 
 import { TaskResolver } from './resolvers/task.resolver';
 import { TaskService } from './services/task.service';
@@ -19,6 +22,7 @@ import { ROUTES } from './app.routes';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
@@ -27,7 +31,8 @@ import { ROUTES } from './app.routes';
     }),
     RouterModule.forRoot(ROUTES, {
       useHash: true
-    })
+    }),
+    ToastrModule.forRoot()
   ],
   providers: [
     TaskService,
