@@ -37,11 +37,10 @@ urlpatterns = [
 ### Code: HTTP (2/3)
 
 ```python
-class TasksView(viewsets.ModelViewSet):
+class TasksView(generics.CreateAPIView):
 
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    lookup_url_kwarg = 'task_id'
 
     def perform_create(self, serializer):
         task = serializer.save()
