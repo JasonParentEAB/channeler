@@ -18,6 +18,6 @@ Building Better Navigate Features with Bidirectional APIs
 
 ## Simple Example: Polling
 
-___
+---
 
 ## Navigate Example: Course Registration
