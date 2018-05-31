@@ -125,6 +125,8 @@ class TasksConsumer(AsyncJsonWebsocketConsumer):
         })
 ```
 
+---
+
 ## Navigate Example: Course Registration
 
 ---
@@ -185,6 +187,8 @@ class EventsConsumer(AsyncJsonWebsocketConsumer):
         })
 ```
 
+---
+
 ### Code: Server
 
 ```python
@@ -235,6 +239,7 @@ export class ChannelerService {
   unsubscribe(): void {...}
 }
 ```
+
 ---
 
 ### Code: UI (2/3)
@@ -259,6 +264,7 @@ export class ChannelerService {
     }
   }
 ```
+
 ---
 
 ### Code: UI (3/3)
