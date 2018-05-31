@@ -12,13 +12,17 @@ import { TaskService } from './services/task.service';
 
 import { AppComponent } from './components/app/app.component';
 import { TasksComponent } from './components/tasks/tasks.component';
+import { ClientComponent } from './components/client/client.component';
+import { ServerComponent } from './components/server/server.component';
 
 import { ROUTES } from './app.routes';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TasksComponent
+    TasksComponent,
+    ClientComponent,
+    ServerComponent
   ],
   imports: [
     BrowserModule,

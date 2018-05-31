@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col">
+    <h2>Client</h2>
+    <p class="lead">Subscribe to a student channel.</p>
+    <form novalidate #clientForm="ngForm">
+      <div class="form-group">
+        <label for="student">Student</label>
+        <input id="student" class="form-control" type="text" placeholder="Enter student NK" name="student" required [(ngModel)]="data.student">
+      </div>
+      <div class="btn-group-vertical btn-block">
+        <button class="btn btn-primary" type="button" (click)="connect()">Connect</button>
+        <button class="btn btn-primary" type="button" (click)="subscribe()" [disabled]="!data.student">Subscribe</button>
+        <button class="btn btn-primary" type="button" (click)="unsubscribe()" [disabled]="!data.student">Unsubscribe</button>
+        <button class="btn btn-primary" type="button" (click)="disconnect()">Disconnect</button>
+      </div>
+    </form>
+  </div>
+</div>

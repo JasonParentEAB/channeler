@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col">
+      <h2>Server</h2>
+      <p class="lead">Send events to clients over student channel.</p>
+      <form novalidate #serverForm="ngForm">
+        <div class="form-group">
+          <label for="student">Student</label>
+          <input id="student" class="form-control" type="text" placeholder="Enter student NK" name="student" required [(ngModel)]="data.student">
+        </div>
+        <div class="btn-group-vertical btn-block">
+          <button class="btn btn-primary" type="button" (click)="sendSuccess()" [disabled]="!data.student">Send Success</button>
+          <button class="btn btn-primary" type="button" (click)="sendFailure()" [disabled]="!data.student">Send Failure</button>
+        </div>
+      </form>
+    </div>
+  </div>

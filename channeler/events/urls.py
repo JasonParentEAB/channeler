@@ -7,5 +7,5 @@ from .views import EventsView
 __author__ = 'Jason Parent'
 
 urlpatterns = [
-    path('events/', EventsView.as_view(), name='events'),
+    path('', EventsView.as_view(), name='events'),
 ]

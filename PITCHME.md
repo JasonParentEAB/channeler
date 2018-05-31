@@ -28,9 +28,8 @@ Building Better Navigate Features with Bidirectional APIs
 
 ```python
 urlpatterns = [
-    path('', TasksView.as_view(), name='tasks'),
+    path('tasks/', TasksView.as_view(), name='tasks'),
 ]
-
 ```
 
 ---
@@ -72,7 +71,6 @@ def create_task(*, task_id, duration):
         group=group,
         message=message
     )
-
 ```
 
 ---
@@ -85,7 +83,6 @@ application = ProtocolTypeRouter({
         path('tasks/', TasksConsumer),
     ])
 })
-
 ```
 
 ---
@@ -109,7 +106,6 @@ class TasksConsumer(AsyncJsonWebsocketConsumer):
         await self.send_json({
             'task': event['task'],
         })
-
 ```
 
 ---
@@ -160,7 +156,6 @@ class EventsConsumer(AsyncJsonWebsocketConsumer):
             'registration_type': event.get('registration_type'),
             'registration_data': event.get('registration_data'),
         })
-
 ```
 
 --- 
@@ -184,7 +179,6 @@ async_to_sync(channel_layer.group_send)(
     group=student_nk,
     message=message
 )
-
 ```
 
 ---
@@ -230,7 +224,6 @@ export class ChannelerService {
     }
   }
 }
-
 ```
 
 ---
