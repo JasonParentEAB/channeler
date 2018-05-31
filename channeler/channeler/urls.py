@@ -7,7 +7,7 @@ __author__ = 'Jason Parent'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('notifications/', include(('notifications.urls', 'notifications'))),
+    path('events/', include(('events.urls', 'events'))),
     path('tasks/', include(('tasks.urls', 'tasks'))),
     path('', TemplateView.as_view(template_name='index.html')),
 ]

@@ -5,14 +5,14 @@ from django.urls import path
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 # Local imports.
-from notifications.consumers import NotificationsConsumer
+from events.consumers import EventsConsumer
 from tasks.consumers import TasksConsumer
 
 __author__ = 'Jason Parent'
 
 application = ProtocolTypeRouter({
     'websocket': URLRouter([
-        path('notifications/', NotificationsConsumer),
+        path('events/', EventsConsumer),
         path('tasks/', TasksConsumer),
     ])
 })

@@ -28,7 +28,7 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
-    'notifications',
+    'events',
     'tasks',
 )
 
