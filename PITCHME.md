@@ -34,9 +34,87 @@ urlpatterns = [
 ]
 ```
 
+**tasks/views.py**
+
+```python
+class TasksView(viewsets.ModelViewSet):
+
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    lookup_url_kwarg = 'task_id'
+
+    def perform_create(self, serializer):
+        task = serializer.save()
+        django_rq.enqueue(
+            create_task,
+            task_id=task.id,
+            duration=self.request.data.get('duration')
+        )
+```
+
+---
+
+### Code: HTTP (Continued)
+
+**tasks/views.py**
+
+```python
+def create_task(*, task_id, duration):
+    # Sleep for a while to simulate long-running task.
+    time.sleep(duration)
+
+    # Update task.
+    task = Task.objects.get(id=task_id)
+    task.status = Task.SUCCESS
+    task.save()
+
+    # Push data to client over WebSocket.
+    group = f'task-{task_id}'
+    message = {
+        'type': 'task.status',
+        'task': TaskSerializer(task).data,
+    }
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        group=group,
+        message=message
+    )
+```
+
 ---
 
 ### Code: WebSocket
+
+**channeler/routing.py**
+
+```python
+application = ProtocolTypeRouter({
+    'websocket': URLRouter([
+        path('tasks/', TasksConsumer),
+    ])
+})
+```
+
+**tasks/consumers.py**
+
+```python
+class TasksConsumer(AsyncJsonWebsocketConsumer):
+
+    async def receive_json(self, content, **kwargs):
+        group = content.get('group')
+        await self.channel_layer.group_add(
+            group=group, 
+            channel=self.channel_name
+        )
+        await self.send_json({
+            'detail': f'Added to group {group}.'
+        })
+
+    async def task_status(self, event):
+        await self.send_json({
+            'task': event['task'],
+        })
+```
 
 ---
 
