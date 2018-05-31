@@ -24,9 +24,7 @@ Building Better Navigate Features with Bidirectional APIs
 
 ---
 
-### Code: HTTP
-
-**tasks/urls.py**
+### Code: HTTP (1/3)
 
 ```python
 urlpatterns = [
@@ -34,7 +32,9 @@ urlpatterns = [
 ]
 ```
 
-**tasks/views.py**
+---
+
+### Code: HTTP (2/3)
 
 ```python
 class TasksView(viewsets.ModelViewSet):
@@ -54,9 +54,7 @@ class TasksView(viewsets.ModelViewSet):
 
 ---
 
-### Code: HTTP (Continued)
-
-**tasks/views.py**
+### Code: HTTP (3/3)
 
 ```python
 def create_task(*, task_id, duration):
@@ -83,9 +81,7 @@ def create_task(*, task_id, duration):
 
 ---
 
-### Code: WebSocket
-
-**channeler/routing.py**
+### Code: WebSocket (1/2)
 
 ```python
 application = ProtocolTypeRouter({
@@ -95,7 +91,9 @@ application = ProtocolTypeRouter({
 })
 ```
 
-**tasks/consumers.py**
+---
+
+### Code: WebSocket (2/2)
 
 ```python
 class TasksConsumer(AsyncJsonWebsocketConsumer):
