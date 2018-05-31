@@ -26,7 +26,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let task of tasks">
+        <tr *ngFor="let task of tasks" [ngClass]="
+          {
+            'table-success': task.status == 'SUCCESS',
+            'table-error': task.status == 'FAILURE',
+            'table-info': task.status == 'PENDING'
+          }
+        ">
           <th scope="row">{{ task.id }}</th>
           <td>{{ task.status }}</td>
           <td>{{ task.created }}</td>

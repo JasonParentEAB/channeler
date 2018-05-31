@@ -43,7 +43,7 @@ export class TasksComponent implements OnInit, OnDestroy {
           this.toastr.success('I\'m done.');
         }
         else if (message.hasOwnProperty('detail')) {
-          this.toastr.info(message.detail);
+          this.toastr.info('Pending...');
         }
         else {
           console.log(message);
