@@ -24,17 +24,18 @@ Building Better Navigate Features with Bidirectional APIs
 
 ---
 
-### Code: HTTP (1/3)
+### Code: HTTP (1/2)
 
 ```python
 urlpatterns = [
     path('', TasksView.as_view(), name='tasks'),
 ]
+
 ```
 
 ---
 
-### Code: HTTP (2/3)
+### Code: HTTP (2/2)
 
 ```python
 class TasksView(generics.CreateAPIView):
@@ -49,13 +50,8 @@ class TasksView(generics.CreateAPIView):
             task_id=task.id,
             duration=self.request.data.get('duration')
         )
-```
 
----
 
-### Code: HTTP (3/3)
-
-```python
 def create_task(*, task_id, duration):
     # Sleep for a while to simulate long-running task.
     time.sleep(duration)
@@ -76,11 +72,12 @@ def create_task(*, task_id, duration):
         group=group,
         message=message
     )
+
 ```
 
 ---
 
-### Code: WebSocket (1/3)
+### Code: WebSocket (1/2)
 
 ```python
 application = ProtocolTypeRouter({
@@ -88,11 +85,12 @@ application = ProtocolTypeRouter({
         path('tasks/', TasksConsumer),
     ])
 })
+
 ```
 
 ---
 
-### Code: WebSocket (2/3)
+### Code: WebSocket (2/2)
 
 ```python
 class TasksConsumer(AsyncJsonWebsocketConsumer):
@@ -107,22 +105,11 @@ class TasksConsumer(AsyncJsonWebsocketConsumer):
             'detail': f'Added to group {group}.'
         })
 
-    async def task_status(self, event): ...
-```
-
----
-
-### Code: WebSocket (3/3)
-
-```python
-class TasksConsumer(AsyncJsonWebsocketConsumer):
-
-    async def receive_json(self, content, **kwargs): ...
-
     async def task_status(self, event):
         await self.send_json({
             'task': event['task'],
         })
+
 ```
 
 ---
@@ -135,7 +122,7 @@ class TasksConsumer(AsyncJsonWebsocketConsumer):
 
 ---
 
-### Code: WebSocket (1/3)
+### Code: WebSocket (1/2)
 
 ```python
 application = ProtocolTypeRouter({
@@ -147,7 +134,7 @@ application = ProtocolTypeRouter({
 
 ---
 
-### Code: WebSocket (2/3)
+### Code: WebSocket (2/2)
 
 ```python
 class EventsConsumer(AsyncJsonWebsocketConsumer):
@@ -167,27 +154,16 @@ class EventsConsumer(AsyncJsonWebsocketConsumer):
                 'message': f'Subscribed to {student} events.'
             })
 
-    async def broadcast_event(self, event): ...
-```
-
---- 
-
-### Code: WebSocket (3/3)
-
-```python
-class EventsConsumer(AsyncJsonWebsocketConsumer):
-
-    async def receive_json(self, content): ...
-
     async def broadcast_event(self, event):
         await self.send_json({
             'type': 'send',
             'registration_type': event.get('registration_type'),
             'registration_data': event.get('registration_data'),
         })
+
 ```
 
----
+--- 
 
 ### Code: Server
 
@@ -201,15 +177,19 @@ message = {
     },
 }
 channel_layer = get_channel_layer()
+
+# Broadcast message to any client listening 
+# on the student channel.
 async_to_sync(channel_layer.group_send)(
     group=student_nk,
     message=message
 )
+
 ```
 
 ---
 
-### Code: UI (1/3)
+### Code: UI
 
 ```typescript
 import { WebSocketSubject } from 'rxjs/webSocket';
@@ -234,26 +214,12 @@ export class ChannelerService {
     }
   }
 
-  send(message: any): void {...}
-
-  unsubscribe(): void {...}
-}
-```
-
----
-
-### Code: UI (2/3)
-
-```typescript
-import { WebSocketSubject } from 'rxjs/webSocket';
-
-export class ChannelerService {
-
-  private socket: WebSocketSubject<any>;
-
-  subscribe(): void {...}
-
-  send(message: any): void {...}
+  /**
+  Send data to server over WebSocket connection.
+  */
+  send(message: any): void {
+    this.socket.next(message);
+  }
 
   /**
   Disconnect from WebSocket.
@@ -263,27 +229,8 @@ export class ChannelerService {
       this.socket.unsubscribe();
     }
   }
+}
+
 ```
 
 ---
-
-### Code: UI (3/3)
-
-```typescript
-import { WebSocketSubject } from 'rxjs/webSocket';
-
-export class ChannelerService {
-
-  private socket: WebSocketSubject<any>;
-
-  subscribe(): void {...}
-
-  /**
-  Send data to server over WebSocket connection.
-  */
-  send(message: any): void {
-    this.socket.next(message);
-  }
-
-  unsubscribe(): void {...}
-```
